@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/dice-black.svg" />
+    <link rel="icon" type="image/svg+xml" href="/dice-white.svg" media="(prefers-color-scheme: dark)"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <link rel="stylesheet" href="./src/style.css" />
+    <script>
+      (function () {
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark')
+        } else {
+          document.documentElement.classList.remove('dark')
+        }
+
+        // Whenever the user explicitly chooses light mode
+        localStorage.theme = 'light'
+
+        // Whenever the user explicitly chooses dark mode
+        localStorage.theme = 'dark'
+
+        // Whenever the user explicitly chooses to respect the OS preference
+        localStorage.removeItem('theme')
+      }());
+    </script>
+  </head>
+  <body class="bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen flex items-center justify-center">
+      <div class="container mx-auto p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col md:flex-row gap-6">
+        <div class="flex-1 form-container">
+            <h1 class="text-3xl font-bold text-center mb-6">Diceware Generator</h1>
+
+            <!-- Option to choose between Random String or Passphrase -->
+            <div class="mb-4">
+            <label for="generation-type" class="block text-sm font-medium mb-2">Choose Type:</label>
+            <select id="generation-type" class="border border-gray-300 dark:border-gray-600 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="passphrase" selected>Passphrase (Diceware)</option>
+                <option value="random-string">Random String</option>
+            </select>
+            </div>
+
+            <!-- Checkbox to use virtual dice -->
+            <div class="mb-4">
+                <input type="checkbox" id="use-virtual-dice" checked class="mr-2">
+                <label for="use-virtual-dice" class="text-sm font-medium">Use Virtual Dice</label>
+            </div>
+
+            <!-- Input for number of dice (4 or 5 for passphrase, dynamic for random string) -->
+            <div id="dice-selection" class="mb-4">
+            <label for="dice-count" class="block text-sm font-medium mb-2">Number of dice:</label>
+            <select id="dice-count" class="border border-gray-300 dark:border-gray-600 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <!-- Dynamic options based on the type and entropy -->
+            </select>
+            </div>
+
+            <!-- Input for target entropy (only for random string) -->
+            <div id="entropy-selection" class="mb-4">
+            <label for="target-entropy" class="block text-sm font-medium mb-2">Target Entropy:</label>
+            <select id="target-entropy" class="border border-gray-300 dark:border-gray-600 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="128">128 bits (16 bytes)</option>
+                <option value="256" selected>256 bits (32 bytes)</option>
+                <option value="512">512 bits (64 bytes)</option>
+            </select>
+            </div>
+
+            <!-- Input for number of words (only for passphrase) -->
+            <div id="word-selection" class="mb-4 hidden">
+            <label for="word-count" class="block text-sm font-medium mb-2">Number of Words:</label>
+            <select id="word-count" class="border border-gray-300 dark:border-gray-600 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="4">4 Words</option>
+                <option value="5" selected>5 Words</option>
+                <option value="6">6 Words</option>
+                <option value="7">7 Words</option>
+            </select>
+            </div>
+
+            <!-- Number of rolls will be automatically calculated -->
+            <div id="rolls-selection" class="mb-4">
+                <label for="roll-count" class="block text-sm font-medium mb-2">Number of Rolls:</label>
+                <input type="number" id="roll-count" value="1" readonly class="border border-gray-300 dark:border-gray-600 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <!-- Dropdown for output format (only for random string) -->
+            <div id="output-format-selection" class="mb-6">
+                <label for="output-format" class="block text-sm font-medium mb-2">Output Format:</label>
+                <select id="output-format" class="border border-gray-300 dark:border-gray-600 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="base64" selected>Base64</option>
+                    <option value="hex">Hexadecimal</option>
+                </select>
+            </div>
+
+            <!-- Generate button -->
+            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">Generate</button>
+
+            <!-- Output section for passphrase with different formats -->
+            <div class="mt-6 hidden" id="output-section">
+              <h2 id="output-header" class="text-xl font-bold mb-2">Selected Words</h2>
+
+              <div id="random-string-output">
+                  <!-- Random string output -->
+                  <!-- <p id="output" class="hidden border border-gray-300 dark:border-gray-600 p-4 mt-2 rounded bg-gray-100 dark:bg-gray-700 text-black dark:text-white"></p> -->
+                  <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-inner relative mb-2 flex gap-2 items-center" id="space-passphrase">
+                    <p id="output" class="flex-1 text-blue-600 font-mono"></p>
+                    <button id="copy-random-string-btn" class="text-black bg-gray-300 hover:bg-gray-400 text-xs py-1 px-2 ml-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      Copy
+                    </button>
+                  </div>
+              </div>
+
+              <div id="passphrase-output">
+                  <!-- Passphrase words (normal display) -->
+                  <div class="mb-4 border border-gray-300 dark:border-gray-600 p-4 mt-2 rounded bg-gray-100 dark:bg-gray-700 text-black dark:text-white">
+                    <p id="passphrase-words" class="text-xl tracking-wide font-mono text-center"></p>
+                  </div>
+
+                  <!-- Space-separated and Hyphen-separated passphrase in smaller sections -->
+                  <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-inner">
+                    <h3 class="font-semibold mb-2">Passphrase with spaces or dashes</h3>
+
+                    <!-- Space-separated passphrase -->
+                    <div class="relative mb-2 flex items-center" id="space-passphrase">
+                      <p id="passphrase-space" class="flex-1 text-blue-600 font-mono"></p>
+                      <button id="copy-space-btn" class="text-black bg-gray-300 hover:bg-gray-400 text-xs py-1 px-2 ml-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Copy
+                      </button>
+                    </div>
+
+                    <!-- Hyphen-separated passphrase -->
+                    <div class="relative mb-2 flex items-center" id="hyphen-passphrase">
+                      <p id="passphrase-hyphen" class="flex-1 text-blue-600 font-mono"></p>
+                      <button id="copy-hyphen-btn" class="text-black bg-gray-300 hover:bg-gray-400 text-xs py-1 px-2 ml-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Copy
+                      </button>
+                    </div>
+              </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Dice Rolls Section -->
+        <div class="flex-1 dice-rolls-container p-4 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-inner overflow-hidden">
+            <h2 class="text-xl font-semibold mb-4">Dice Rolls</h2>
+            <div class="overflow-y-auto" style="height:calc(100% - 1.95em);">
+                <div id="dice-rolls" class="space-y-4">
+                <!-- Dynamic input fields or virtual dice results will be inserted here -->
+                </div>
+            </div>
+        </div>
+      </div>
+
+    <!-- Include your JS logic -->
+    <script type="module">
+      import {
+        generate,
+        toggleInputFields,
+        generateDiceRollInputs,
+        updateRollsBasedOnSelection,
+        updateDiceOptions,
+        copyToClipboard
+      } from './src/main.js';
+
+      toggleInputFields();
+
+      // Attach event handlers
+      document.getElementById('generation-type').addEventListener('change', toggleInputFields);
+      document.getElementById('dice-count').addEventListener('change', updateRollsBasedOnSelection);
+      document.querySelector('button').addEventListener('click', generate);
+      document.getElementById('word-count').addEventListener('change', updateRollsBasedOnSelection);
+      document.getElementById('target-entropy').addEventListener('change', () => {
+        updateDiceOptions();
+        updateRollsBasedOnSelection();
+      });
+      document.getElementById('copy-space-btn').addEventListener('click', () => copyToClipboard('passphrase-space'));
+      document.getElementById('copy-hyphen-btn').addEventListener('click', () => copyToClipboard('passphrase-hyphen'));
+      document.getElementById('copy-random-string-btn').addEventListener('click', () => copyToClipboard('output'));
+    </script>
+  </body>
+</html>
