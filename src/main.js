@@ -149,7 +149,7 @@ export function generateDiceRollInputs() {
     rollDiv.classList = 'mb-4 flex flex-wrap items-center'; // Flexbox for single line
 
     const rollLabel = document.createElement('h4');
-    rollLabel.classList = 'mr-4 font-semibold'; // Margin right for spacing
+    rollLabel.classList = 'mr-4 font-semibold w-14'; // Margin right for spacing
     rollLabel.textContent = `Roll ${roll + 1}:`;
 
     rollDiv.appendChild(rollLabel);
@@ -158,9 +158,7 @@ export function generateDiceRollInputs() {
       const input = document.createElement('input');
       input.type = 'text';
       input.maxLength = 1;
-      input.classList = i === diceCount - 1
-        ? 'p-2 w-12 text-center focus:outline-none'
-        : 'p-2 w-12 text-center focus:outline-none border-r-0'; // Inline and styled
+      input.classList = `p-2 w-12 text-center focus:outline-none bg-white dark:bg-gray-700 text-gray-900 border-t border-b border-gray-300 dark:text-gray-200 dark:border-gray-600 ${i === diceCount - 1 ? 'border-r' : ''} ${i === 0 ? 'border-l' : ''}`
       input.id = `dice-roll-${roll}-${i}`;
       input.placeholder = `${i + 1}`;
 
