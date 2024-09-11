@@ -69,7 +69,7 @@ export function updateDiceOptions() {
 
     const option = document.createElement('option');
     option.value = closestOption;
-    option.text = `${closestOption} Dice (${requiredRolls} Rolls - exceeds limit)`;
+    option.text = `${closestOption} Dice (${requiredRolls} Rolls)`;
     diceCountSelect.appendChild(option);
   }
 
@@ -213,7 +213,7 @@ export function toggleInputFields() {
     wordSelection.classList.remove('hidden');
     document.getElementById('dice-count').innerHTML = `
       <option value="4">4 Dice</option>
-      <option value="5" selected>5 Dice</option>`;
+      <option value="5" selected>5 Dice (Recommended)</option>`;
     output.classList.add('break-normal');
     output.classList.remove('break-all');
     outputHeader.innerHTML = 'Selected Words';

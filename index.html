@@ -29,8 +29,9 @@
   </head>
   <body class="bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
       <header class="w-full p-4 bg-gray-100 dark:bg-gray-900 flex justify-between items-center">
-        <div class="flex items-center space-x-4">
-          <img src="/dice-white.svg" alt="Diceware" class="w-8 h-8">
+        <div>
+          <img src="/dice-white.svg" alt="Diceware" class="w-8 h-8 hidden dark:inline">
+          <img src="/dice-black.svg" alt="Diceware" class="w-8 h-8 dark:hidden">
         </div>
         <div class="flex items-center space-x-2">
             <a href="#faqs" class="text-blue-600 dark:text-blue-400">FAQs</a>
@@ -140,8 +141,8 @@
                 <label for="word-count" class="block text-sm font-medium mb-2">Number of Words:</label>
                 <select id="word-count" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="4">4 Words</option>
-                    <option value="5" selected>5 Words</option>
-                    <option value="6">6 Words</option>
+                    <option value="5">5 Words</option>
+                    <option value="6" selected>6 Words (Recommended)</option>
                     <option value="7">7 Words</option>
                 </select>
                 </div>
@@ -278,7 +279,7 @@
                         </summary>
                         <p class="mt-2">
                             No. I don't know if it is useful or even better. I wanted to do it,
-                            but there are much simpler methods available. Such as running,
+                            but there are much simpler & faster methods available. Such as running,
                             the below NodeJS code.
                             <code class="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md my-2 block">require('crypto').randomBytes(32).toString('base64');</code>
                             or this shell command <code class="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md my-2 block">openssl rand -base64 32</code>
