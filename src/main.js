@@ -120,11 +120,11 @@ export function updateRollsBasedOnSelection() {
 function validateDiceInput(inputElement, nextInputId) {
   const value = parseInt(inputElement.value);
   if (isNaN(value) || value < 1 || value > 6) {
-    inputElement.classList.remove('border-gray-300', 'dark:border-gray-600'); // Remove default border classes
-    inputElement.classList.add('border-red-500'); // Add red border on invalid input
+    inputElement.classList.add('border-b-red-500');
+    inputElement.classList.add('border-b');
   } else {
-    inputElement.classList.remove('border-red-500'); // Remove red border if input is valid
-    inputElement.classList.add('border-gray-300', 'dark:border-gray-600'); // Restore default border classes
+    inputElement.classList.remove('border-b-red-500');
+    inputElement.classList.remove('border-b');
 
     // Move to the next input if valid and nextInputId exists
     const nextInput = document.getElementById(nextInputId);
@@ -158,7 +158,9 @@ export function generateDiceRollInputs() {
       const input = document.createElement('input');
       input.type = 'text';
       input.maxLength = 1;
-      input.classList = 'border border-gray-300 dark:border-gray-600 p-2 w-12 mx-1 mb-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'; // Inline and styled
+      input.classList = i === diceCount - 1
+        ? 'p-2 w-12 text-center focus:outline-none'
+        : 'p-2 w-12 text-center focus:outline-none border-r-0'; // Inline and styled
       input.id = `dice-roll-${roll}-${i}`;
       input.placeholder = `${i + 1}`;
 
@@ -166,6 +168,9 @@ export function generateDiceRollInputs() {
       const nextInputId = `dice-roll-${i === diceCount - 1 ? roll + 1 : roll}-${i === diceCount - 1 ? 0 : i + 1}`;
       input.addEventListener('input', function () {
         validateDiceInput(this, nextInputId);
+      });
+      input.addEventListener('focus', function () {
+        this.select();
       });
 
       rollDiv.appendChild(input);
