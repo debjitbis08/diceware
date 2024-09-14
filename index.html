@@ -10,20 +10,15 @@
     <script>
       (function () {
         // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark')
+        const theme = localStorage.theme;
+        if (theme === 'system') {
+            // Detect system preference (dark or light)
+            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.classList.toggle('dark', isDarkMode);
         } else {
-          document.documentElement.classList.remove('dark')
+            // Apply the manually selected theme ('light' or 'dark')
+            document.documentElement.classList.toggle('dark', theme === 'dark');
         }
-
-        // Whenever the user explicitly chooses light mode
-        // localStorage.theme = 'light'
-
-        // Whenever the user explicitly chooses dark mode
-        // localStorage.theme = 'dark'
-
-        // Whenever the user explicitly chooses to respect the OS preference
-        // localStorage.removeItem('theme')
       }());
     </script>
   </head>
@@ -36,60 +31,10 @@
         <div class="flex items-center space-x-2">
             <a href="#faqs" class="text-blue-600 dark:text-blue-400">FAQs</a>
             <div class="pl-2 border-r border-r-gray-500 dark:border-r-gray-600 h-4"></div>
-            <div class="relative inline-block text-left">
-              <div>
-                <button type="button" class="inline-flex justify-center rounded-md px-3 py-2 text-sm font-semibold text-gray-800 dark:text-gray-200 bg-transparent focus:outline-none" id="theme-switcher-button" aria-expanded="true" aria-haspopup="true">
-                  <span id="theme-icon">
-                    <!-- This will change dynamically -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m6.364 1.636l-.707.707M21 12h-1m-1.636 6.364l-.707-.707M12 21v1m-6.364-1.636l.707-.707M3 12H2m1.636-6.364l.707.707M12 7a5 5 0 100 10 5 5 0 000-10z" />
-                    </svg>
-                  </span>
-                </button>
-              </div>
-
-              <!-- Dropdown menu for theme selection -->
-              <div id="theme-dropdown" class="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="theme-switcher-button" tabindex="-1">
-                <div role="none">
-                  <!-- Light Mode Option -->
-                  <button class="px-4 py-2 text-sm flex items-center bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 w-full rounded-none" role="menuitem" tabindex="-1" id="theme-light">
-                    <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5001M17.6859 17.69L18.5 18.5001M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    Light
-                  </button>
-
-                  <!-- Dark Mode Option -->
-                  <button class="px-4 py-2 text-sm flex items-center bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 w-full rounded-none" role="menuitem" tabindex="-1" id="theme-dark">
-                    <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path d="M3.32031 11.6835C3.32031 16.6541 7.34975 20.6835 12.3203 20.6835C16.1075 20.6835 19.3483 18.3443 20.6768 15.032C19.6402 15.4486 18.5059 15.6834 17.3203 15.6834C12.3497 15.6834 8.32031 11.654 8.32031 6.68342C8.32031 5.50338 8.55165 4.36259 8.96453 3.32996C5.65605 4.66028 3.32031 7.89912 3.32031 11.6835Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    Dark
-                  </button>
-
-                  <!-- System Mode Option -->
-                  <button class="px-4 py-2 text-sm flex items-center bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 w-full rounded-none" role="menuitem" tabindex="-1" id="theme-system">
-                    <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path d="M7 21H17M9 17V21M15 17V21M6.2 17H17.8C18.9201 17 19.4802 17 19.908 16.782C20.2843 16.5903 20.5903 16.2843 20.782 15.908C21 15.4802 21 14.9201 21 13.8V6.2C21 5.0799 21 4.51984 20.782 4.09202C20.5903 3.71569 20.2843 3.40973 19.908 3.21799C19.4802 3 18.9201 3 17.8 3H6.2C5.0799 3 4.51984 3 4.09202 3.21799C3.71569 3.40973 3.40973 3.71569 3.21799 4.09202C3 4.51984 3 5.07989 3 6.2V13.8C3 14.9201 3 15.4802 3.21799 15.908C3.40973 16.2843 3.71569 16.5903 4.09202 16.782C4.51984 17 5.07989 17 6.2 17Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    System
-                  </button>
-                </div>
-              </div>
-            </div>
+            {{> theme-dropdown }}
             <a href="https://github.com/debjitbis08/diceware" target="_blank" class="flex items-center gap-1 text-blue-600 dark:text-blue-400">
                 <div class="text-black dark:text-white">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                          <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="currentColor">
-                              <g id="icons" transform="translate(56.000000, 160.000000)">
-                                  <path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399" id="github-[#142]">
-
-                  </path>
-                              </g>
-                          </g>
-                      </g>
-                  </svg>
+                    {{> icons/github }}
                 </div>
             </a>
         </div>
@@ -222,7 +167,7 @@
           </div>
       </main>
 
-      <aside class="mt-6 pb-12 max-w-3xl mx-auto space-y-8">
+      <aside class="mt-6 pb-12 px-4 lg:max-w-3xl mx-auto space-y-8">
         <!-- Purpose Section -->
         <div>
           <h3 class="text-2xl font-semibold mb-2">Purpose</h3>
@@ -242,7 +187,7 @@
           </p>
           <p class="mt-2 text-gray-700 dark:text-gray-300">
             This application was created to allow the generation of random strings by rolling physical dice. While simpler methods exist, such as the following NodeJS script:
-            <code class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md">require('crypto').randomBytes(32).toString('base64');</code>, I wanted to have some fun and create a tool for manual dice rolling!
+            <code class="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md break-words">require('crypto').randomBytes(32).toString('base64');</code>, I wanted to have some fun and create a tool for manual dice rolling!
           </p>
 
           <p class="mt-4">(Diceware is a trademark of A G Reinhold)</p>
@@ -365,115 +310,6 @@
       document.getElementById('copy-space-btn').addEventListener('click', () => copyToClipboard('passphrase-space'));
       document.getElementById('copy-hyphen-btn').addEventListener('click', () => copyToClipboard('passphrase-hyphen'));
       document.getElementById('copy-random-string-btn').addEventListener('click', () => copyToClipboard('output'));
-    </script>
-    <script>
-      (function () {
-        const themeButton = document.getElementById('theme-switcher-button');
-        const themeDropdown = document.getElementById('theme-dropdown');
-        const themeIcon = document.getElementById('theme-icon');
-        let isDropdownOpen = false;
-
-        const themeLight = document.getElementById('theme-light');
-        const themeDark = document.getElementById('theme-dark');
-        const themeSystem = document.getElementById('theme-system');
-
-        // Function to switch themes and update the icon
-        function switchTheme(theme) {
-          if (theme === 'light') {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-            updateIcon('light');
-            highlightActiveOption('light');
-          } else if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-            updateIcon('dark');
-            highlightActiveOption('dark');
-          } else if (theme === 'system') {
-            localStorage.removeItem('theme');
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-              document.documentElement.classList.add('dark');
-            } else {
-              document.documentElement.classList.remove('dark');
-            }
-            updateIcon('system');
-            highlightActiveOption('system');
-          }
-        }
-
-        // Update the icon in the theme switcher button based on the selected theme
-        function updateIcon(theme) {
-          if (theme === 'light') {
-            themeIcon.innerHTML = `
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5001M17.6859 17.69L18.5 18.5001M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>`;
-          } else if (theme === 'dark') {
-            themeIcon.innerHTML = `
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path d="M3.32031 11.6835C3.32031 16.6541 7.34975 20.6835 12.3203 20.6835C16.1075 20.6835 19.3483 18.3443 20.6768 15.032C19.6402 15.4486 18.5059 15.6834 17.3203 15.6834C12.3497 15.6834 8.32031 11.654 8.32031 6.68342C8.32031 5.50338 8.55165 4.36259 8.96453 3.32996C5.65605 4.66028 3.32031 7.89912 3.32031 11.6835Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>`;
-          } else {
-            themeIcon.innerHTML = `
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path d="M7 21H17M9 17V21M15 17V21M6.2 17H17.8C18.9201 17 19.4802 17 19.908 16.782C20.2843 16.5903 20.5903 16.2843 20.782 15.908C21 15.4802 21 14.9201 21 13.8V6.2C21 5.0799 21 4.51984 20.782 4.09202C20.5903 3.71569 20.2843 3.40973 19.908 3.21799C19.4802 3 18.9201 3 17.8 3H6.2C5.0799 3 4.51984 3 4.09202 3.21799C3.71569 3.40973 3.40973 3.71569 3.21799 4.09202C3 4.51984 3 5.07989 3 6.2V13.8C3 14.9201 3 15.4802 3.21799 15.908C3.40973 16.2843 3.71569 16.5903 4.09202 16.782C4.51984 17 5.07989 17 6.2 17Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>`;
-          }
-        }
-
-        // Highlight the active theme option in the dropdown
-        function highlightActiveOption(theme) {
-          themeLight.classList.remove('text-blue-700', 'dark:text-blue-400');
-          themeDark.classList.remove('text-blue-700', 'dark:text-blue-400');
-          themeSystem.classList.remove('text-blue-700', 'dark:text-blue-400');
-          // text-gray-700 dark:text-gray-200
-
-          if (theme === 'light') {
-            themeLight.classList.add('text-blue-700', 'dark:text-blue-400');
-            themeDark.classList.remove('text-gray-700', 'dark:text-gray-200');
-            themeSystem.classList.remove('text-gray-700', 'dark:text-gray-200');
-          } else if (theme === 'dark') {
-            themeDark.classList.add('text-blue-700', 'dark:text-blue-400');
-            themeLight.classList.remove('text-gray-700', 'dark:text-gray-200');
-            themeSystem.classList.remove('text-gray-700', 'dark:text-gray-200');
-          } else {
-            themeSystem.classList.add('text-blue-700', 'dark:text-blue-400');
-            themeLight.classList.remove('text-gray-700', 'dark:text-gray-200');
-            themeDark.classList.remove('text-gray-700', 'dark:text-gray-200');
-          }
-        }
-
-        // Event listeners for theme options
-        themeLight.addEventListener('click', () => switchTheme('light'));
-        themeDark.addEventListener('click', () => switchTheme('dark'));
-        themeSystem.addEventListener('click', () => switchTheme('system'));
-
-        // Toggle the dropdown visibility
-        themeButton.addEventListener('click', () => {
-          isDropdownOpen = !isDropdownOpen;
-          themeDropdown.classList.toggle('hidden', !isDropdownOpen);
-        });
-
-        // Close the dropdown if clicking outside
-        document.addEventListener('click', (event) => {
-          if (!themeButton.contains(event.target) && !themeDropdown.contains(event.target)) {
-            themeDropdown.classList.add('hidden');
-            isDropdownOpen = false;
-          }
-        });
-
-        // Load saved theme or system theme on page load
-        window.addEventListener('load', () => {
-          const savedTheme = localStorage.getItem('theme');
-          if (savedTheme === 'dark') {
-            switchTheme('dark');
-          } else if (savedTheme === 'light') {
-            switchTheme('light');
-          } else {
-            switchTheme('system');
-          }
-        });
-      }());
     </script>
   </body>
 </html>

@@ -1,5 +1,56 @@
+import Alpine from "alpinejs";
+import persist from '@alpinejs/persist'
+
 const base64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 const hexchars = '0123456789abcdef';
+
+Alpine.plugin(persist);
+
+window.Alpine = Alpine;
+
+document.addEventListener('alpine:init', () => {
+  console.log('Alpine init');
+  Alpine.store('theme', {
+      value: 'system',
+
+      init() {
+          this.value = localStorage.getItem('theme') || 'system';
+          // On page load, apply the appropriate theme
+          this.applyTheme();
+
+          // Watch for changes in system preference if the theme is 'system'
+          this.watchSystemPreference();
+      },
+
+      switch(theme) {
+          this.value = theme;  // Update theme value
+          this.applyTheme();   // Apply the selected theme
+          localStorage.setItem('theme', theme);
+      },
+
+      applyTheme() {
+          if (this.value === 'system') {
+              // Detect system preference (dark or light)
+              const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              document.documentElement.classList.toggle('dark', isDarkMode);
+          } else {
+              // Apply the manually selected theme ('light' or 'dark')
+              document.documentElement.classList.toggle('dark', this.value === 'dark');
+          }
+      },
+
+      watchSystemPreference() {
+          // Watch for system preference changes (e.g., user switches from dark to light mode in OS)
+          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+              if (this.value === 'system') {
+                  document.documentElement.classList.toggle('dark', e.matches);
+              }
+          });
+      }
+  });
+});
+
+Alpine.start();
 
 // Entropy to bits per roll calculation based on dice count
 const BITS_PER_ROLL = {
