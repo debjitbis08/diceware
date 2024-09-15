@@ -1,3 +1,8 @@
+---
+import SunIcon from '../icons/sun.svg?raw';
+import MoonIcon from '../icons/moon.svg?raw';
+import ComputerDesktopIcon from '../icons/computer-desktop.svg?raw';
+---
 <!-- Dropdown menu for theme selection -->
 <div class="flex justify-center">
     <div
@@ -35,9 +40,15 @@
             type="button"
         >
           <span id="theme-icon">
-              <span x-show="$store.theme.value === 'light'">{{> icons/sun }}</span>
-              <span x-show="$store.theme.value === 'dark'">{{> icons/moon }}</span>
-              <span x-show="$store.theme.value === 'system'">{{> icons/computer-desktop }}</span>
+              <span x-show="$store.theme.value === 'light'">
+                <Fragment set:html={SunIcon} />
+              </span>
+              <span x-show="$store.theme.value === 'dark'">
+                <Fragment set:html={MoonIcon} />
+              </span>
+              <span x-show="$store.theme.value === 'system'">
+                <Fragment set:html={ComputerDesktopIcon} />
+              </span>
           </span>
         </button>
       </div>
@@ -69,9 +80,15 @@
                   @click="$store.theme.switch(option.theme)"
                 >
                   <!-- Dynamically inject icon based on theme -->
-                  <template x-if="option.icon === 'sun'">{{> icons/sun }}</template>
-                  <template x-if="option.icon === 'moon'">{{> icons/moon }}</template>
-                  <template x-if="option.icon === 'computer-desktop'">{{> icons/computer-desktop }}</template>
+                  <template x-if="option.icon === 'sun'">
+                    <Fragment set:html={SunIcon} />
+                  </template>
+                  <template x-if="option.icon === 'moon'">
+                    <Fragment set:html={MoonIcon} />
+                  </template>
+                  <template x-if="option.icon === 'computer-desktop'">
+                    <Fragment set:html={ComputerDesktopIcon} />
+                  </template>
                   <div x-text="option.name"></div>
                 </button>
               </template>

@@ -1,0 +1,89 @@
+<div class="mb-4 flex flex-wrap items-center" x-data="diceRoll">
+    <span class="mr-4 font-semibold w-14">
+        Roll <span x-text="roll"></span>
+    </span>
+    <template x-for="i in dicePerRoll">
+        <input
+            type="text"
+            maxlength="1"
+            :placeholder="i"
+            :id="`dice-roll-${roll}-${i}`"
+            class="p-2 w-12 text-center focus:outline-none bg-white dark:bg-gray-700 text-gray-900 border-t border-b border-gray-300 dark:text-gray-200 dark:border-gray-600"
+            :class="i === dicePerRoll ? 'border-r' : i === 1 ? 'border-l' : ''"
+            @focus="$el.select()"
+            @input="validateDiceInput($el, roll, dicePerRoll, i)"
+            :disabled="useVirtualDice"
+            x-init="initInput($el)"
+        />
+    </template>
+    <button
+        @click="handleRoll(roll, dicePerRoll, rollValues)"
+        class="text-sm ml-2 p-2 bg-blue-500 hover:bg-blue-700 text-white rounded roll-btn"
+        :class="{ hidden: !useVirtualDice }">Roll</button>
+    <button
+        @click="handleSave(roll, dicePerRoll, rollValues)"
+        class="text-sm ml-2 p-2 bg-blue-500 hover:bg-blue-700 text-white rounded"
+        :class="{ hidden: useVirtualDice }">Save</button>
+</div>
+
+<script>
+  import Alpine from 'alpinejs';
+
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('diceRoll', () => ({
+        initInput(el) {
+          this.$watch('dicePerRoll', () => el.value = '');
+          this.$watch('rolls', () => el.value = '');
+        },
+
+        handleRoll(roll, diceCount, rollValues) {
+            const randomArray = secureRandomDiceRoll(diceCount);
+            const rollResult = [];
+
+            for (let i = 1; i <= diceCount; i++) {
+              const diceValue = (randomArray[i - 1] % 6) + 1; // Generate a number between 1 and 6
+              rollResult.push(diceValue);
+
+              // Fill the corresponding input field
+              document.getElementById(`dice-roll-${roll}-${i}`).value = diceValue;
+            }
+
+            rollValues[roll - 1] = rollResult;
+        },
+
+        handleSave: (roll, dicePerRoll, rollValues) => {
+          const rollResult = [];
+          for (let i = 1; i <= dicePerRoll; i++) {
+            const diceValue = document.getElementById(`dice-roll-${roll}-${i}`).value;
+            rollResult.push(diceValue);
+          }
+          rollValues[roll - 1] = rollResult;
+        },
+
+        validateDiceInput: (inputElement, roll, dicePerRoll, i) => {
+          const nextInputId = `dice-roll-${i === dicePerRoll ? roll + 1 : roll}-${i === dicePerRoll ? 1 : i + 1}`;
+          const value = parseInt(inputElement.value);
+          if (isNaN(value) || value < 1 || value > 6) {
+            inputElement.classList.add('border-b-red-500');
+            inputElement.classList.add('dark:border-b-red-500');
+          } else {
+            inputElement.classList.remove('border-b-red-500');
+            inputElement.classList.remove('dark:border-b-red-500');
+
+            // Move to the next input if valid and nextInputId exists
+            const nextInput = document.getElementById(nextInputId);
+            if (nextInput) {
+              nextInput.focus();
+            }
+          }
+        }
+    }));
+  });
+
+  function secureRandomDiceRoll(diceCount) {
+    const randomArray = new Uint32Array(diceCount);
+    window.crypto.getRandomValues(randomArray);
+    return randomArray;
+  }
+
+</script>

@@ -1,0 +1,58 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Purpose from '../components/Purpose.astro';
+import Alternatives from '../components/Alternatives.astro';
+import FAQs from '../components/FAQs.astro';
+import PassphraseForm from '../components/PassphraseForm.astro';
+import RandomStringForm from '../components/RandomStringForm.astro';
+import DiceRolls from '../components/DiceRolls.astro';
+import PassphraseOutput from '../components/PassphraseOutput.astro';
+import RandomStringOutput from '../components/RandomStringOutput.astro';
+---
+
+<Layout title="Diceware | Generate passphrase and random strings using real or virtual dice">
+	<main class="flex flex-col items-center justify-center max-w-6xl mx-auto p-6">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold">Diceware Generator</h1>
+            <h2 class="text-lg font-medium text-gray-600 dark:text-gray-400 mt-2">Generate passphrases or secure random strings using virtual or physical dice.</h2>
+        </div>
+        <div
+            class="container mx-auto p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col md:flex-row gap-6"
+            x-data="{ type: 'passphrase', dicePerRoll: 5, rolls: 6, rollValues: [], useVirtualDice: true, byteLength: 32 }"
+        >
+            <div class="flex-1 form-container">
+                <!-- Option to choose between Random String or Passphrase -->
+                <div class="mb-4">
+                    <label for="generation-type" class="block text-sm font-medium mb-2">Choose Type:</label>
+                    <!-- <select id="generation-type" class="border border-gray-300 dark:border-gray-600 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"> -->
+                    <select x-model="type" id="generation-type" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="passphrase" selected>Passphrase (Diceware)</option>
+                        <option value="string">Random String</option>
+                    </select>
+                </div>
+
+                <!-- Checkbox to use virtual dice -->
+                <div class="mb-4">
+                    <input type="checkbox" id="use-virtual-dice" x-model="useVirtualDice" class="mr-2">
+                    <label for="use-virtual-dice" class="text-sm font-medium cursor-pointer">Use Virtual Dice</label>
+                </div>
+
+                <PassphraseForm />
+                <RandomStringForm />
+
+                <div class="mt-6">
+                    <PassphraseOutput />
+                    <RandomStringOutput />
+                </div>
+            </div>
+            <!-- Dice Rolls Section -->
+            <DiceRolls />
+        </div>
+	</main>
+	<aside class="mt-6 pb-12 px-4 lg:max-w-3xl mx-auto space-y-8">
+	   <Purpose />
+	   <Alternatives />
+	   <FAQs />
+	</aside>
+</Layout>
