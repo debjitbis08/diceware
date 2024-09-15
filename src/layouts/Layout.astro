@@ -1,4 +1,6 @@
 ---
+import { pwaInfo } from 'virtual:pwa-info';
+import ReloadPrompt from '../components/ReloadPrompt.astro';
 import './global.css';
 import Header from '../components/Header.astro';
 interface Props {
@@ -32,10 +34,13 @@ const { title } = Astro.props;
               }
           }());
         </script>
+        <script src="/src/pwa.js"></script>
+        { pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
 	</head>
     <body class="bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
         <Header />
 		<slot />
+		<ReloadPrompt />
 	</body>
 </html>
 <style is:global>

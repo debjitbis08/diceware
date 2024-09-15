@@ -25,6 +25,17 @@
             </template>
         </select>
     </div>
+    <div class="mb-4">
+        <label for="output-format" class="block text-sm font-medium mb-2">Number of bytes to generate</label>
+        <select
+            id="output-format"
+            class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            x-model.number="stringOutputFormat"
+        >
+            <option value="base64" selected>Base64</option>
+            <option value="hex">Hexadecimal</option>
+        </select>
+    </div>
 </div>
 
 <script>

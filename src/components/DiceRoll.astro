@@ -1,5 +1,5 @@
 <div class="mb-4 flex flex-wrap items-center" x-data="diceRoll">
-    <span class="mr-4 font-semibold w-14">
+    <span class="mr-4 font-semibold w-12 lg:w-14 text-sm sm:text-sm md:text-base">
         Roll <span x-text="roll"></span>
     </span>
     <template x-for="i in dicePerRoll">
@@ -8,7 +8,7 @@
             maxlength="1"
             :placeholder="i"
             :id="`dice-roll-${roll}-${i}`"
-            class="p-2 w-12 text-center focus:outline-none bg-white dark:bg-gray-700 text-gray-900 border-t border-b border-gray-300 dark:text-gray-200 dark:border-gray-600"
+            class="p-2 lg:w-12 w-8 text-center focus:outline-none bg-white dark:bg-gray-700 text-gray-900 border-t border-b border-gray-300 dark:text-gray-200 dark:border-gray-600"
             :class="i === dicePerRoll ? 'border-r' : i === 1 ? 'border-l' : ''"
             @focus="$el.select()"
             @input="validateDiceInput($el, roll, dicePerRoll, i)"
@@ -19,10 +19,11 @@
     <button
         @click="handleRoll(roll, dicePerRoll, rollValues)"
         class="text-sm ml-2 p-2 bg-blue-500 hover:bg-blue-700 text-white rounded roll-btn"
+        :class="{ 'bg-gray-500': isRolling, 'hover:bg-gray-600': isRolling }"
         :class="{ hidden: !useVirtualDice }">Roll</button>
     <button
         @click="handleSave(roll, dicePerRoll, rollValues)"
-        class="text-sm ml-2 p-2 bg-blue-500 hover:bg-blue-700 text-white rounded"
+        class="text-sm ml-2 p-2 bg-blue-500 hover:bg-blue-700 text-white rounded save-btn"
         :class="{ hidden: useVirtualDice }">Save</button>
 </div>
 

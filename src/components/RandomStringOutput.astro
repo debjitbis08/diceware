@@ -1,16 +1,14 @@
 <div id="random-string-output" x-data="stringOutput" :class="{ hidden: rollValues.length === 0 || type !== 'string' }">
     <h2 id="string-output-header" class="text-xl font-bold mb-2">Random String</h2>
 
-    <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-inner">
-        <div class="relative mb-2 flex items-center">
-            <p id="generated-string" class="flex-1 text-blue-600 dark:text-blue-400 font-mono" x-text="generatedString"></p>
-            <button
-                class="text-black bg-gray-300 hover:bg-gray-400 text-xs py-1 px-2 ml-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                @click="copyToClipboard('generated-string')"
-            >
-            Copy
-            </button>
-        </div>
+    <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-inner relative mb-2 flex gap-2 items-center">
+        <p id="generated-string" class="flex-1 break-all text-blue-600 dark:text-blue-400 font-mono" x-text="generatedString"></p>
+        <button
+            class="text-black bg-gray-300 hover:bg-gray-400 text-xs py-1 px-2 ml-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            @click="copyToClipboard('generated-string')"
+        >
+        Copy
+        </button>
     </div>
 </div>
 
@@ -25,8 +23,18 @@ document.addEventListener('alpine:init', () => {
       Alpine.effect(() => {
         if (this.type !== 'string') return;
 
-        this.generatedString = convertDiceRollsToRandomString(this.rollValues, this.byteLength * 8);
+        this.generatedString = convertDiceRollsToRandomString(this.rollValues, this.byteLength * 8, this.stringOutputFormat);
 
+      });
+    },
+
+
+    copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
       });
     }
   }));

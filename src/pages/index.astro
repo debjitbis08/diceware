@@ -18,13 +18,13 @@ import RandomStringOutput from '../components/RandomStringOutput.astro';
             <h2 class="text-lg font-medium text-gray-600 dark:text-gray-400 mt-2">Generate passphrases or secure random strings using virtual or physical dice.</h2>
         </div>
         <div
-            class="container mx-auto p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col md:flex-row gap-6"
-            x-data="{ type: 'passphrase', dicePerRoll: 5, rolls: 6, rollValues: [], useVirtualDice: true, byteLength: 32 }"
+            class="container mx-auto p-2 sm:p-2 md:p-4 lg:p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col md:flex-row gap-6"
+            x-data="{ type: 'passphrase', dicePerRoll: 5, rolls: 6, rollValues: [], useVirtualDice: true, byteLength: 32, stringOutputFormat: 'base64' }"
         >
             <div class="flex-1 form-container">
                 <!-- Option to choose between Random String or Passphrase -->
                 <div class="mb-4">
-                    <label for="generation-type" class="block text-sm font-medium mb-2">Choose Type:</label>
+                    <label for="generation-type" class="block text-sm font-medium mb-2">Choose Type</label>
                     <!-- <select id="generation-type" class="border border-gray-300 dark:border-gray-600 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"> -->
                     <select x-model="type" id="generation-type" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="passphrase" selected>Passphrase (Diceware)</option>
