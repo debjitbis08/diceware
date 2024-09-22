@@ -4,11 +4,14 @@
     </span>
     <template x-for="i in dicePerRoll">
         <input
-            type="text"
+            type="number"
             maxlength="1"
+            inputmode="numeric"
+            min="1"
+            max="6"
             :placeholder="i"
             :id="`dice-roll-${roll}-${i}`"
-            class="p-2 lg:w-12 w-8 text-center focus:outline-none bg-white dark:bg-gray-700 text-gray-900 border-t border-b border-gray-300 dark:text-gray-200 dark:border-gray-600"
+            class="p-2 lg:w-12 w-8 text-center focus:outline-none bg-white dark:bg-gray-700 text-gray-900 border-t border-b border-gray-300 dark:text-gray-200 dark:border-gray-600 rounded-none"
             :class="i === dicePerRoll ? 'border-r' : i === 1 ? 'border-l' : ''"
             @focus="$el.select()"
             @input="validateDiceInput($el, roll, dicePerRoll, i)"
@@ -26,6 +29,19 @@
         class="text-sm ml-2 p-2 bg-blue-500 hover:bg-blue-700 text-white rounded save-btn"
         :class="{ hidden: useVirtualDice }">Save</button>
 </div>
+
+<style>
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+</style>
 
 <script>
   import Alpine from 'alpinejs';
