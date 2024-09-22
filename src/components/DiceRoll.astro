@@ -19,8 +19,8 @@
     <button
         @click="handleRoll(roll, dicePerRoll, rollValues)"
         class="text-sm ml-2 p-2 bg-blue-500 hover:bg-blue-700 text-white rounded roll-btn"
-        :class="{ 'bg-gray-500': isRolling, 'hover:bg-gray-600': isRolling }"
-        :class="{ hidden: !useVirtualDice }">Roll</button>
+        :class="{ 'bg-gray-500': isRolling, 'hover:bg-gray-600': isRolling, hidden: !useVirtualDice }"
+    >Roll</button>
     <button
         @click="handleSave(roll, dicePerRoll, rollValues)"
         class="text-sm ml-2 p-2 bg-blue-500 hover:bg-blue-700 text-white rounded save-btn"

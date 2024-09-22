@@ -11,10 +11,10 @@ import PassphraseOutput from '../components/PassphraseOutput.astro';
 import RandomStringOutput from '../components/RandomStringOutput.astro';
 ---
 
-<Layout title="Diceware | Generate passphrase and random strings using real or virtual dice">
+<Layout title="Dice Generated Secure Strings and Passphrases">
 	<main class="flex flex-col items-center justify-center max-w-6xl mx-auto p-6">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold">Diceware Generator</h1>
+            <h1 class="text-3xl font-bold">Dice Generated Secure Strings and Passphrases</h1>
             <h2 class="text-lg font-medium text-gray-600 dark:text-gray-400 mt-2">Generate passphrases or secure random strings using virtual or physical dice.</h2>
         </div>
         <div
@@ -25,9 +25,8 @@ import RandomStringOutput from '../components/RandomStringOutput.astro';
                 <!-- Option to choose between Random String or Passphrase -->
                 <div class="mb-4">
                     <label for="generation-type" class="block text-sm font-medium mb-2">Choose Type</label>
-                    <!-- <select id="generation-type" class="border border-gray-300 dark:border-gray-600 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"> -->
                     <select x-model="type" id="generation-type" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="passphrase" selected>Passphrase (Diceware)</option>
+                        <option value="passphrase" selected>Passphrase</option>
                         <option value="string">Random String</option>
                     </select>
                 </div>
