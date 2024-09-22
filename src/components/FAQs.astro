@@ -1,0 +1,69 @@
+<div id="faqs">
+    <h3 class="text-2xl font-semibold mb-2">Frequently Asked Questions</h3>
+    <div class="mt-2">
+        <div>
+            <details>
+                <summary class="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+                    Is rolling dice really helpful to generate random strings?
+                </summary>
+                <p class="mt-2">
+                    No. I don't know if it is useful or even better. I wanted to do it,
+                    but there are much simpler & faster methods available. Such as running,
+                    the below NodeJS code.
+                    <code class="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md my-2 block">require('crypto').randomBytes(32).toString('base64');</code>
+                    or this shell command <code class="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md my-2 block">openssl rand -base64 32</code>
+                </p>
+            </details>
+        </div>
+        <div>
+            <details>
+                <summary class="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+                    Does the application track any data?
+                </summary>
+                <p class="mt-2">
+                    No. The application does not track anything. There are no logs generated.
+                </p>
+            </details>
+        </div>
+        <div>
+            <details>
+                <summary class="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+                    What word list is used to generate the passphrase?
+                </summary>
+                <p class="mt-2">
+                    The wordlists used are from <a href="https://www.eff.org/dice">EFF</a>. If you choose 5 dice (recommended), then the long word
+                    list is used. For 4 dice option the short word list is used.
+                </p>
+            </details>
+        </div>
+        <div>
+            <details>
+                <summary class="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+                    What are the recommended options for passphrase generation?
+                </summary>
+                <p class="mt-2">
+                    For passphrases, longer is better. Choose 5 dice option and
+                    select at least 6 words.
+                </p>
+                <p class="mt-2">
+                    Use real physical dice if possible.
+                </p>
+            </details>
+        </div>
+        <div>
+            <details>
+                <summary class="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+                    How secure is the virtual dice option?
+                </summary>
+                <p class="mt-2">
+                    The application uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues">getRandomValues() function in JavaScript</a>
+                    and it is considered the best and secure method of generating
+                    random values in the browser.
+                </p>
+                <p class="mt-2">
+                    If you don't trust your computer, use dice.
+                </p>
+            </details>
+        </div>
+    </div>
+</div>

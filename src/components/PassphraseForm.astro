@@ -1,0 +1,49 @@
+<div x-data="passphraseForm" :class="{ hidden: type !== 'passphrase' }">
+    <div id="word-length-selection" class="mb-4">
+        <label for="word-length" class="block text-sm font-medium mb-2">Length of each word</label>
+        <select
+            id="generation-type"
+            class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            x-model.number="dicePerRoll"
+            @change="rollValues = []"
+        >
+            <option value="4">Short</option>
+            <option value="5" selected>Long (recommended)</option>
+        </select>
+    </div>
+
+    <!-- Input for number of words (only for passphrase) -->
+    <div id="word-selection" class="mb-4">
+        <label for="word-count" class="block text-sm font-medium mb-2">Number of Words</label>
+        <select
+            id="word-count"
+            class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            x-model.number="rolls"
+            @change="rollValues = []"
+        >
+            <option value="4">4 Words</option>
+            <option value="5">5 Words</option>
+            <option value="6" selected>6 Words (Recommended)</option>
+            <option value="7">7 Words</option>
+        </select>
+    </div>
+</div>
+
+<script>
+import Alpine from 'alpinejs';
+
+document.addEventListener('alpine:init', () => {
+  Alpine.data('passphraseForm', () => ({
+    init() {
+      this.$watch('type', (type) => {
+        if (type === 'passphrase') {
+          this.dicePerRoll = 5;
+          this.rolls = 6;
+          this.rollValues = [];
+        }
+      });
+    },
+  }));
+});
+
+</script>

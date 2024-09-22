@@ -1,0 +1,107 @@
+<div x-data="randomStringForm" :class="{ hidden: type !== 'string' }">
+    <div class="mb-4">
+        <label for="byte-length" class="block text-sm font-medium mb-2">Number of bytes to generate</label>
+        <select
+            id="byte-length"
+            class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            x-model.number="byteLength"
+            @change="handleByteLengthChange($el)"
+        >
+            <option value="16">16 Bytes</option>
+            <option value="32" selected>32 Bytes</option>
+            <option value="64">64 Bytes</option>
+        </select>
+    </div>
+    <div class="mb-4">
+        <label for="number-of-dice" class="block text-sm font-medium mb-2">Number of dice per roll</label>
+        <select
+            id="number-of-dice"
+            class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            @change="handleNumberOfDiceChange($el)"
+            x-model.number="dicePerRoll"
+        >
+            <template x-for="option in diceOptions">
+                <option :value="option.value" x-text="option.text" :selected="option.value === '5'"></option>
+            </template>
+        </select>
+    </div>
+    <div class="mb-4">
+        <label for="output-format" class="block text-sm font-medium mb-2">Number of bytes to generate</label>
+        <select
+            id="output-format"
+            class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            x-model.number="stringOutputFormat"
+        >
+            <option value="base64" selected>Base64</option>
+            <option value="hex">Hexadecimal</option>
+        </select>
+    </div>
+</div>
+
+<script>
+import Alpine from "alpinejs";
+
+const BITS_PER_ROLL = {
+  1: Math.log2(Math.pow(6, 1)),
+  2: Math.log2(Math.pow(6, 2)),
+  3: Math.log2(Math.pow(6, 3)),
+  4: Math.log2(Math.pow(6, 4)),
+  5: Math.log2(Math.pow(6, 5)),
+};
+
+document.addEventListener('alpine:init', () => {
+  Alpine.data('randomStringForm', () => {
+
+    return {
+      diceOptions: [],
+
+      init() {
+        this.$watch('type', (type) => {
+          if (type === 'string') {
+            const diceOptions = getDiceOptions(this.byteLength * 8);
+
+            this.diceOptions = diceOptions.sort((a, b) => a.requiredRolls - b.requireRolls).map(({ diceCount, requiredRolls }) => ({
+              value: diceCount,
+              text: `${diceCount} Dice (${requiredRolls} Rolls)`,
+            }));
+            this.dicePerRoll = 5;
+            this.rolls = Math.ceil(this.byteLength * 8 / BITS_PER_ROLL[5]);
+            this.rollValues = [];
+          }
+        });
+      },
+
+      handleByteLengthChange(el) {
+        this.rollValues = [];
+
+        const value = Number(el.value);
+
+        const diceOptions = getDiceOptions(value * 8);
+
+        this.diceOptions = diceOptions.sort((a, b) => a.requiredRolls - b.requireRolls).map(({ diceCount, requiredRolls }) => ({
+          value: diceCount,
+          text: `${diceCount} Dice (${requiredRolls} Rolls)`,
+        }));
+        this.dicePerRoll = 5;
+        this.rolls = Math.ceil(this.byteLength * 8 / BITS_PER_ROLL[5])
+      },
+
+      handleNumberOfDiceChange(el) {
+        const value = Number(el.value);
+        const rolls = Math.ceil(this.byteLength * 8 / BITS_PER_ROLL[value]);
+        this.dicePerRoll = value;
+        this.rolls = rolls;
+      }
+    };
+  });
+});
+
+function getDiceOptions(entropy /* In bits */) {
+  return Object.keys(BITS_PER_ROLL).map((diceCount) => {
+    const bitsPerRoll = BITS_PER_ROLL[diceCount];
+    const requiredRolls = Math.ceil(entropy / bitsPerRoll);
+
+    return { diceCount, requiredRolls };
+  });
+}
+</script>

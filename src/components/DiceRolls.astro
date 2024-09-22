@@ -1,0 +1,53 @@
+---
+import DiceRoll from './DiceRoll.astro';
+---
+<div x-data="diceRolls" class="flex-1 dice-rolls-container p-4 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-inner overflow-hidden">
+    <div class="flex items-center w-full mb-4">
+        <h2 class="text-xl font-semibold">Dice Rolls
+            <span class="text-sm text-gray-600">(<span x-text="rolls"></span>)</span></h2>
+        <button
+            type="button"
+            class="text-sm ml-2 px-2 py-1 bg-blue-500 hover:bg-blue-700 text-white rounded"
+            :class="{ 'bg-gray-500': isRolling, 'hover:bg-gray-600': isRolling }"
+            @click="handleAllRolls($root)"
+            x-text="useVirtualDice ? (isRolling ? 'Rolling' : 'Roll All') : 'Save All'"
+            :disabled="isRolling"
+        >
+        </button>
+    </div>
+    <div class="overflow-y-auto pb-8" style="max-height: calc(10 * 58px);">
+        <div id="dice-rolls" class="space-y-4">
+            <template x-for="roll in rolls">
+                <DiceRoll />
+            </template>
+        </div>
+    </div>
+</div>
+
+<script>
+import Alpine from 'alpinejs';
+
+document.addEventListener('alpine:init', () => {
+  Alpine.data('diceRolls', () => ({
+    isRolling: false,
+
+    handleAllRolls(componentRootEl) {
+      const buttons = componentRootEl.querySelectorAll(this.useVirtualDice ? '.roll-btn' : '.save-btn');
+
+      // Set rolling state to true at the start
+      this.isRolling = true;
+
+      buttons.forEach((btnEl, index) => {
+        setTimeout(() => {
+          btnEl.click();
+
+          // Set rolling state to false after the last button is clicked
+          if (index === buttons.length - 1) {
+            this.isRolling = false;
+          }
+        }, index * 200); // 200ms delay between each click
+      });
+    }
+  }));
+});
+</script>

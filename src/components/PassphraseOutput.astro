@@ -1,0 +1,111 @@
+<div id="passphrase-output" x-data="passphraseOutput" :class="{ hidden: rollValues.length === 0 || type !== 'passphrase' }">
+    <h2 id="output-header" class="text-xl font-bold mb-2">Selected Words</h2>
+
+    <!-- Passphrase words (normal display) -->
+    <div class="mb-4 border border-gray-300 dark:border-gray-600 p-4 mt-2 rounded bg-gray-100 dark:bg-gray-700 text-black dark:text-white">
+        <p id="passphrase-words" class="text-xl tracking-wide font-mono text-center">
+            <span x-text="selectedWords.join(' ')"></span>
+        </p>
+    </div>
+
+    <!-- Space-separated and Hyphen-separated passphrase in smaller sections -->
+    <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-inner">
+        <h3 class="font-semibold mb-2">Passphrase with spaces or dashes</h3>
+
+        <!-- Space-separated passphrase -->
+        <div class="relative mb-2 flex items-center" id="space-passphrase">
+            <p id="passphrase-space" class="flex-1 text-blue-600 dark:text-blue-400 font-mono" x-text="selectedWords.join(' ')"></p>
+            <button
+                id="copy-space-btn"
+                class="text-black bg-gray-300 hover:bg-gray-400 text-xs py-1 px-2 ml-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                @click="copyToClipboard('passphrase-space')"
+            >
+            Copy
+            </button>
+        </div>
+
+        <!-- Hyphen-separated passphrase -->
+        <div class="relative mb-2 flex items-center" id="hyphen-passphrase">
+            <p id="passphrase-hyphen" class="flex-1 text-blue-600 dark:text-blue-400 font-mono" x-text="selectedWords.join('-')"></p>
+            <button
+                id="copy-hyphen-btn"
+                class="text-black bg-gray-300 hover:bg-gray-400 text-xs py-1 px-2 ml-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                @click="copyToClipboard('passphrase-hyphen')"
+            >
+            Copy
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+  import Alpine from "alpinejs";
+
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('passphraseOutput', () => {
+      return {
+        shortWordList: [],
+        longWordList: [],
+        selectedWords: [],
+
+        init() {
+          loadWordList(5).then((words) => this.longWordList = words);
+          loadWordList(4).then((words) => this.shortWordList = words);
+
+          this.$watch('type', (type) => {
+            if (type === 'passphrase') {
+              this.selectedWords = [];
+            }
+          });
+
+          this.$watch('rollValues', (type) => {
+              if (this.type === 'passphrase') {
+                this.selectedWords = this.rollValues.map(roll => diceRollsToWord(roll, this.dicePerRoll === 4 ? this.shortWordList : this.longWordList));;
+              }
+          });
+        },
+
+        copyToClipboard(elementId) {
+          const text = document.getElementById(elementId).innerText;
+          navigator.clipboard.writeText(text).then(() => {
+            alert('Copied to clipboard!');
+          }).catch(err => {
+            console.error('Failed to copy: ', err);
+          });
+        }
+      };
+    });
+  });
+
+  function diceRollsToWord(diceRolls, wordlist) {
+    let rollKey = diceRolls.join('');
+    return wordlist[rollKey] || '[Unknown Word]';
+  }
+
+  const wordListCache = {};
+
+  async function loadWordList(dicePerRoll) {
+    if (wordListCache[dicePerRoll]) {
+      return wordListCache[dicePerRoll];
+    }
+
+    const wordlistUrl = dicePerRoll === 4
+      ? '/wordlists/eff_short_wordlist.txt'
+      : '/wordlists/eff_large_wordlist.txt';
+
+    const response = await fetch(wordlistUrl);
+    const data = await response.text();
+
+    const wordlist = {};
+    data.split('\n').forEach(line => {
+      const [roll, word] = line.trim().split(/\s+/);
+      if (roll && word) {
+        wordlist[roll] = word;
+      }
+    });
+
+    wordListCache[dicePerRoll] = wordlist;
+
+    return wordlist;
+  }
+</script>
