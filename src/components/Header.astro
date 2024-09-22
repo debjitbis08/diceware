@@ -1,11 +1,17 @@
 ---
 import GithubIcon from '../icons/github.svg?raw';
+import DiceWhiteIcon from '../icons/dice-white.svg?raw';
+import DiceBlackIcon from '../icons/dice-black.svg?raw';
 import ThemeSwitcher from './ThemeSwitcher.astro';
 ---
 <header class="w-full p-4 bg-gray-100 dark:bg-gray-900 flex justify-between items-center">
   <div>
-    <img src="/dice-white.svg" alt="Diceware" class="w-8 h-8 hidden dark:inline">
-    <img src="/dice-black.svg" alt="Diceware" class="w-8 h-8 dark:hidden">
+    <div class="w-8 h-8 hidden dark:block">
+        <Fragment set:html={DiceWhiteIcon}/>
+    </div>
+    <span class="w-8 h-8 block dark:hidden">
+        <Fragment set:html={DiceBlackIcon}/>
+    </span>
   </div>
   <div class="flex items-center space-x-2">
       <a href="#faqs" class="text-blue-600 dark:text-blue-400">FAQs</a>
