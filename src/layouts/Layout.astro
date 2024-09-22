@@ -75,10 +75,7 @@ const { title } = Astro.props;
 <script>
 import Alpine from 'alpinejs';
 
-console.log('Layout init');
-
 document.addEventListener('alpine:init', () => {
-  console.log('Alpine init');
   Alpine.store('theme', {
       value: 'system',
 

@@ -16,7 +16,8 @@
     "@types/alpinejs": "^3.13.10",
     "alpinejs": "^3.14.1",
     "astro": "^4.15.6",
-    "tailwindcss": "^3.4.11"
+    "tailwindcss": "^3.4.11",
+    "workbox-window": "^7.1.0"
   },
   "devDependencies": {
     "@vite-pwa/astro": "^0.4.3"
