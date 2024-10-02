@@ -11,6 +11,7 @@ import PassphraseOutput from '../components/PassphraseOutput.astro';
 import RandomStringOutput from '../components/RandomStringOutput.astro';
 import PassphraseGenerator from '../components/PassphraseGenerator.astro';
 import RandomStringGenerator from '../components/RandomStringGenerator.astro';
+import PasswordGenerator from '../components/PasswordGenerator.astro';
 ---
 
 <Layout title="Dice Generated Secure Strings and Passphrases">
@@ -30,6 +31,7 @@ import RandomStringGenerator from '../components/RandomStringGenerator.astro';
                     <select x-model="type" id="generation-type" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="passphrase" selected>Passphrase</option>
                         <option value="string">Random String</option>
+                        <option value="password">Password</option>
                     </select>
                 </div>
 
@@ -41,6 +43,7 @@ import RandomStringGenerator from '../components/RandomStringGenerator.astro';
 
                 <PassphraseGenerator />
                 <RandomStringGenerator />
+                <PasswordGenerator />
 
             </div>
             <!-- Dice Rolls Section -->

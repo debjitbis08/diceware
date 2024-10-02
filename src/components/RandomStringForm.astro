@@ -33,6 +33,7 @@
             x-model.number="stringOutputFormat"
         >
             <option value="base64" selected>Base64</option>
+            <option value="urlSafeBase64" selected>URL and Filename safe Base64</option>
             <option value="hex">Hexadecimal</option>
         </select>
     </div>
@@ -60,7 +61,7 @@ document.addEventListener('alpine:init', () => {
           if (type === 'string') {
             const diceOptions = getDiceOptions(this.byteLength * 8);
 
-            this.diceOptions = diceOptions.sort((a, b) => a.requiredRolls - b.requireRolls).map(({ diceCount, requiredRolls }) => ({
+            this.diceOptions = diceOptions.sort((a, b) => a.requiredRolls - b.requiredRolls).map(({ diceCount, requiredRolls }) => ({
               value: diceCount,
               text: `${diceCount} Dice (${requiredRolls} Rolls)`,
             }));
@@ -78,7 +79,7 @@ document.addEventListener('alpine:init', () => {
 
         const diceOptions = getDiceOptions(value * 8);
 
-        this.diceOptions = diceOptions.sort((a, b) => a.requiredRolls - b.requireRolls).map(({ diceCount, requiredRolls }) => ({
+        this.diceOptions = diceOptions.sort((a, b) => a.requiredRolls - b.requiredRolls).map(({ diceCount, requiredRolls }) => ({
           value: diceCount,
           text: `${diceCount} Dice (${requiredRolls} Rolls)`,
         }));

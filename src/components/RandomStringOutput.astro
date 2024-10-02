@@ -41,36 +41,45 @@ document.addEventListener('alpine:init', () => {
 });
 
 function convertDiceRollsToRandomString(diceRolls, targetEntropy, outputFormat = 'base64') {
-  let binaryString = '';
+  const charSet =
+    outputFormat === 'base64'
+    ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+    : 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'; // Base64 character set
+  const hexCharSet = '0123456789abcdef'; // Hexadecimal character set
 
-  // Convert each roll result into its binary representation
+  let combinedRolls = [];
+
+  // Flatten the dice rolls array (in case it's a 2D array)
   diceRolls.forEach(roll => {
-    roll.forEach(diceValue => {
-      const binary = (diceValue - 1).toString(2).padStart(3, '0'); // 3 bits for each dice (since 6 dice values = 2^3 = 8 possibilities)
-      binaryString += binary;
-    });
+    combinedRolls = combinedRolls.concat(roll);
   });
 
-  // Ensure we have exactly enough bits (targetEntropy) by trimming or adding more rolls
-  binaryString = binaryString.slice(0, targetEntropy); // Slice to the target entropy bits
+  let result = '';
 
-  // Convert the binary string into bytes
-  const byteLength = Math.ceil(binaryString.length / 8);
-  const byteArray = new Uint8Array(byteLength);
-
-  for (let i = 0; i < byteLength; i++) {
-    byteArray[i] = parseInt(binaryString.slice(i * 8, (i + 1) * 8), 2);
+  // Adjust target entropy for base64 if needed (multiple of 6 bits)
+  if (outputFormat === 'base64' || outputFormat === 'urlSafeBase64') {
+    targetEntropy = Math.ceil(targetEntropy / 6) * 6; // Make it a multiple of 6
   }
 
-  // Convert byte array to Base64 or Hex
-  if (outputFormat === 'base64') {
-    return btoa(String.fromCharCode.apply(null, byteArray)); // Base64 encoding
-  } else if (outputFormat === 'hex') {
-    return Array.from(byteArray)
-      .map(byte => byte.toString(16).padStart(2, '0'))
-      .join(''); // Hex encoding
+  // Directly use dice values to index into charSet
+  let groupSize = Math.ceil(Math.log2(outputFormat === 'hex' ? 16 : 64) / Math.log2(6)); // Group size based on the charSet and dice range
+
+  let index = 0;
+  const charSetLength = charSet.length;
+  while (result.length < Math.ceil(targetEntropy / (outputFormat === 'hex' ? 4 : 6))) {
+    let value = 0;
+    for (let i = 0; i < groupSize; i++) {
+      if (index >= combinedRolls.length) index = 0; // Wrap around dice rolls if needed
+      value = value * 6 + (combinedRolls[index++] - 1); // Create index by combining dice values
+    }
+
+    if (outputFormat === 'base64' || outputFormat === 'urlSafeBase64') {
+      result += charSet[value % charSetLength]; // Map to Base64 character set
+    } else if (outputFormat === 'hex') {
+      result += hexCharSet[value % 16]; // Map to Hexadecimal character set
+    }
   }
 
-  return '';
+  return result;
 }
 </script>

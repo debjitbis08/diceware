@@ -5,6 +5,7 @@ import RandomStringOutput from "./RandomStringOutput.astro";
 
 <div
     x-data="{ byteLength: 32, stringOutputFormat: 'base64' }"
+    :class="{ hidden: type !== 'string' }"
 >
     <RandomStringForm />
 

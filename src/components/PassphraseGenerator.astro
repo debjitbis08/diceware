@@ -3,7 +3,9 @@ import PassphraseForm from "./PassphraseForm.astro";
 import PassphraseOutput from "./PassphraseOutput.astro";
 ---
 
-<div>
+<div
+    :class="{ hidden: type !== 'passphrase' }"
+>
     <PassphraseForm />
 
     <div class="mt-6">
