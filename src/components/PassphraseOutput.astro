@@ -1,4 +1,14 @@
+---
+import effShortWordlist from '../wordlists/eff_short_wordlist.txt?raw';
+import effLargeWordlist from '../wordlists/eff_large_wordlist.txt?raw';
+---
 <div id="passphrase-output" x-data="passphraseOutput" :class="{ hidden: rollValues.length === 0 || type !== 'passphrase' }">
+    <div id="effShortWordlist" class="hidden">
+        {effShortWordlist}
+    </div>
+    <div id="effLargeWordlist" class="hidden">
+        {effLargeWordlist}
+    </div>
     <h2 id="output-header" class="text-xl font-bold mb-2">Selected Words</h2>
 
     <!-- Passphrase words (normal display) -->
@@ -49,6 +59,7 @@
         selectedWords: [],
 
         init() {
+          console.log(effShortWordlist);
           loadWordList(5).then((words) => this.longWordList = words);
           loadWordList(4).then((words) => this.shortWordList = words);
 
@@ -89,12 +100,9 @@
       return wordListCache[dicePerRoll];
     }
 
-    const wordlistUrl = dicePerRoll === 4
-      ? '/wordlists/eff_short_wordlist.txt'
-      : '/wordlists/eff_large_wordlist.txt';
-
-    const response = await fetch(wordlistUrl);
-    const data = await response.text();
+    const data = dicePerRoll === 4
+      ? document.getElementById('effShortWordlist').innerText
+      : document.getElementById('effLargeWordlist').innerText;
 
     const wordlist = {};
     data.split('\n').forEach(line => {

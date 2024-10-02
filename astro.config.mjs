@@ -8,6 +8,18 @@ export default defineConfig({
   integrations: [
     tailwind(),
     alpinejs(),
-    AstroPWA()
-  ]
+    AstroPWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Diceware',
+        short_name: 'Diceware',
+        theme_color: '#ffffff',
+      },
+      includeAssets: ['dice-black.svg', 'dice-white.svg'],
+      pwaAssets: {
+        config: true,
+      },
+    })
+  ],
+  output: 'static'
 });

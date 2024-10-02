@@ -1,3 +1,8 @@
+public/pwa-*.png
+public/maskable-icon-512x512.png
+public/apple-touch-icon-180x180.png
+public/favicon.ico
+
 # build output
 dist/
 
