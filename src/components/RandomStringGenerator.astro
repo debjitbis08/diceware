@@ -1,0 +1,14 @@
+---
+import RandomStringForm from "./RandomStringForm.astro";
+import RandomStringOutput from "./RandomStringOutput.astro";
+---
+
+<div
+    x-data="{ byteLength: 32, stringOutputFormat: 'base64' }"
+>
+    <RandomStringForm />
+
+    <div class="mt-6">
+        <RandomStringOutput />
+    </div>
+</div>

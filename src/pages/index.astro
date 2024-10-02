@@ -9,6 +9,8 @@ import RandomStringForm from '../components/RandomStringForm.astro';
 import DiceRolls from '../components/DiceRolls.astro';
 import PassphraseOutput from '../components/PassphraseOutput.astro';
 import RandomStringOutput from '../components/RandomStringOutput.astro';
+import PassphraseGenerator from '../components/PassphraseGenerator.astro';
+import RandomStringGenerator from '../components/RandomStringGenerator.astro';
 ---
 
 <Layout title="Dice Generated Secure Strings and Passphrases">
@@ -19,7 +21,7 @@ import RandomStringOutput from '../components/RandomStringOutput.astro';
         </div>
         <div
             class="container mx-auto p-2 sm:p-2 md:p-4 lg:p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col md:flex-row gap-6"
-            x-data="{ type: 'passphrase', dicePerRoll: 5, rolls: 6, rollValues: [], useVirtualDice: true, byteLength: 32, stringOutputFormat: 'base64' }"
+            x-data="{ type: 'passphrase', dicePerRoll: 5, rolls: 6, rollValues: [], useVirtualDice: true }"
         >
             <div class="flex-1 form-container">
                 <!-- Option to choose between Random String or Passphrase -->
@@ -37,13 +39,9 @@ import RandomStringOutput from '../components/RandomStringOutput.astro';
                     <label for="use-virtual-dice" class="text-sm font-medium cursor-pointer">Use Virtual Dice</label>
                 </div>
 
-                <PassphraseForm />
-                <RandomStringForm />
+                <PassphraseGenerator />
+                <RandomStringGenerator />
 
-                <div class="mt-6">
-                    <PassphraseOutput />
-                    <RandomStringOutput />
-                </div>
             </div>
             <!-- Dice Rolls Section -->
             <DiceRolls />
